@@ -7,11 +7,13 @@ else joins from their phones by **scanning a QR code**. Unlimited players.
 
 1. The host opens the app and clicks **🎮 Host a game** — a room + QR code appear.
 2. Players scan the QR code, enter their name, and land in the game.
-3. The host clicks **▶ Start** — a 20 second countdown begins.
+3. The host picks a round length (**10, 20 or 30 seconds**, default 20) and
+   clicks **▶ Start** — the countdown begins.
 4. Everyone picks a number from **0 to 10**. Once a number is taken, it's locked
    for everyone else. When the countdown ends, all numbers lock.
 
-The host screen shows a live dashboard of who picked which number.
+The host screen shows a live dashboard of who picked which number. On phones,
+the player's number grid is laid out like a phone keypad.
 
 ## How it works
 
@@ -88,6 +90,7 @@ app.md                Original game spec
 ```
 rooms/{code}
 ├── status: "lobby" | "active" | "ended"
+├── durationMs                   (host-chosen round length: 10000/20000/30000)
 ├── createdAt / startedAt        (server timestamps)
 ├── players/{playerId}
 │   ├── name, at, picked         (picked = their number, null until they choose)

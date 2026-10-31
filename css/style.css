@@ -200,6 +200,45 @@ label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: .9re
   gap: 12px;
 }
 
+/* round-length picker */
+.duration {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.duration-label { color: var(--muted); font-size: .9rem; }
+
+.segmented {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(0, 0, 0, .3);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 12px;
+}
+.segmented button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  font-size: .95rem;
+  padding: 8px 18px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.segmented button:hover { color: var(--text); }
+.segmented button.active {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255, 79, 139, .3);
+}
+
 .countdown {
   font-variant-numeric: tabular-nums;
   font-size: 2.2rem;
@@ -265,6 +304,17 @@ label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: .9re
 
 /* player-side buttons */
 .numbers-grid.big { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+
+/* On phones the player grid becomes a phone-keypad layout:
+   1–9 first, then 0 (centered, like a phone) and 10 beside it. */
+@media (max-width: 640px) {
+  .numbers-grid.big {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .numbers-grid.big [data-num="0"] { order: 10; grid-column: 2; }
+  .numbers-grid.big [data-num="10"] { order: 11; grid-column: 3; }
+}
 
 button.num-cell {
   border: 1px solid rgba(255,255,255,.14);

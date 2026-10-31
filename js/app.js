@@ -6,9 +6,13 @@
 (function () {
   'use strict';
 
-  var ROUND_MS = 20_000;              // 20 second countdown
+  var DEFAULT_ROUND_MS = 20_000;      // fallback round length
   var CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no I/L/O/0/1
   var NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  function durationOf(room) {
+    return (room && room.durationMs) || DEFAULT_ROUND_MS;
+  }
 
   /* ─────────── tiny helpers ─────────── */
 
@@ -169,17 +173,30 @@
     var tick = setInterval(function () {
       var r = state.room;
       if (!r) return;
-      if (r.status === 'active' && r.startedAt && now() >= r.startedAt + ROUND_MS) {
+      if (r.status === 'active' && r.startedAt && now() >= r.startedAt + durationOf(r)) {
         roomRef.update({ status: 'ended' });
       }
       renderHostCountdown(r);
     }, 250);
     onCleanup(function () { clearInterval(tick); });
 
+    // Round length picker (only usable in the lobby)
+    $('#host-duration').onclick = function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('button[data-sec]') : null;
+      if (!btn || !btn.dataset.sec) return;
+      if (!state.room || state.room.status !== 'lobby') return;
+      roomRef.update({ durationMs: parseInt(btn.dataset.sec, 10) * 1000 });
+    };
+
     // Controls
     $('#btn-start').onclick = function () {
       var players = state.room && state.room.players ? state.room.players : {};
-      var up = { status: 'active', startedAt: TIMESTAMP(), numbers: null };
+      var up = {
+        status: 'active',
+        startedAt: TIMESTAMP(),
+        durationMs: durationOf(state.room),
+        numbers: null
+      };
       Object.keys(players).forEach(function (pid) {
         up['players/' + pid + '/picked'] = null;
       });
@@ -226,6 +243,13 @@
       $('#btn-start').classList.toggle('hidden', s.room.status !== 'lobby');
       $('#btn-newround').classList.toggle('hidden', s.room.status !== 'ended');
       $('#host-hint').classList.toggle('hidden', s.room.status !== 'lobby');
+      $('#host-duration').classList.toggle('hidden', s.room.status !== 'lobby');
+
+      // Highlight the chosen round length
+      var seconds = Math.round(durationOf(s.room) / 1000);
+      ['10', '20', '30'].forEach(function (sec) {
+        $('#host-duration button[data-sec="' + sec + '"]').classList.toggle('active', sec === String(seconds));
+      });
 
       renderHostCountdown(s.room);
       renderHostNumbers(s.room);
@@ -237,7 +261,7 @@
       var active = r && r.status === 'active' && r.startedAt;
       el.classList.toggle('hidden', !active);
       if (!active) return;
-      var secs = Math.max(0, Math.ceil((r.startedAt + ROUND_MS - now()) / 1000));
+      var secs = Math.max(0, Math.ceil((r.startedAt + durationOf(r) - now()) / 1000));
       el.textContent = '0:' + String(secs).padStart(2, '0');
       el.classList.toggle('urgent', secs <= 5);
     }
@@ -369,7 +393,7 @@
     function pick(n) {
       var room = state.room;
       if (!room || state.picking || myPick(room) !== null) return;
-      if (room.status !== 'active' || now() >= (room.startedAt || 0) + ROUND_MS) return;
+      if (room.status !== 'active' || now() >= (room.startedAt || 0) + durationOf(room)) return;
 
       state.picking = true;
       state.message = null;
@@ -405,7 +429,7 @@
 
       var chosen = myPick(room);
       var active = room.status === 'active' && room.startedAt;
-      var remaining = active ? room.startedAt + ROUND_MS - now() : 0;
+      var remaining = active ? room.startedAt + durationOf(room) - now() : 0;
       var live = active && remaining > 0;
 
       // Countdown

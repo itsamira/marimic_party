@@ -56,6 +56,14 @@
         </div>
 
         <div id="host-controls">
+          <div id="host-duration" class="duration">
+            <span class="duration-label">Round length</span>
+            <div class="segmented" role="group" aria-label="Round length">
+              <button type="button" data-sec="10">10s</button>
+              <button type="button" data-sec="20" class="active">20s</button>
+              <button type="button" data-sec="30">30s</button>
+            </div>
+          </div>
           <button id="btn-start" class="btn btn-primary btn-big">▶ Start</button>
           <button id="btn-newround" class="btn btn-secondary btn-big hidden">🔄 New round</button>
           <p id="host-hint" class="muted">Press start when everyone has joined. Numbers 0–10, first come first served.</p>
