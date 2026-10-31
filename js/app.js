@@ -360,6 +360,9 @@
 
     show('view-play');
     $('#play-code').textContent = code;
+    $('#play-heading').innerHTML =
+      '<span class="play-name">' + escapeHtml(name) + '</span>, pick a number ' +
+      '<span class="muted small-text">(0–10)</span>';
 
     var roomRef = db.ref('rooms/' + code);
     var state = { room: null, picking: false, message: null };
