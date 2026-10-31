@@ -43,6 +43,20 @@
     });
   }
 
+  /* ─────────── analog countdown clock ───────────
+   * The rim arc shows the remaining slice; the needle (with photo at its tip)
+   * sits on the boundary and sweeps counter-clockwise as time runs out.
+   */
+  function setClock(clockEl, arcEl, handEl, remainingMs, durationMs) {
+    var fraction = Math.max(0, Math.min(1, remainingMs / durationMs));
+    var angle = fraction * 360;
+    arcEl.style.strokeDashoffset = String(100 * (1 - fraction));
+    handEl.style.transform = 'rotate(' + angle + 'deg)';
+    // Keep the photo upright while the needle moves around the face.
+    handEl.style.setProperty('--counter-rotate', (-angle) + 'deg');
+    clockEl.classList.toggle('urgent', remainingMs <= 5000);
+  }
+
   /* ─────────── firebase ─────────── */
 
   var db = null;
@@ -152,6 +166,25 @@
     show('view-host');
     $('#host-code').textContent = code;
 
+    // Show / hide the "scan to join" panel (display preference, remembered locally)
+    var hostGrid = $('#host-grid');
+    var qrToggle = $('#btn-qr-toggle');
+
+    function applyQrVisibility(hidden) {
+      hostGrid.classList.toggle('qr-hidden', hidden);
+      qrToggle.textContent = hidden ? '📷 Show QR' : '🙈 Hide QR';
+    }
+
+    var qrHidden = false;
+    try { qrHidden = localStorage.getItem('mp:qrHidden') === '1'; } catch (e) { /* ignore */ }
+    applyQrVisibility(qrHidden);
+
+    qrToggle.onclick = function () {
+      var hidden = !hostGrid.classList.contains('qr-hidden');
+      applyQrVisibility(hidden);
+      try { localStorage.setItem('mp:qrHidden', hidden ? '1' : '0'); } catch (e) { /* ignore */ }
+    };
+
     var roomRef = db.ref('rooms/' + code);
     var state = { room: null, qrUrl: null };
 
@@ -176,7 +209,7 @@
       if (r.status === 'active' && r.startedAt && now() >= r.startedAt + durationOf(r)) {
         roomRef.update({ status: 'ended' });
       }
-      renderHostCountdown(r);
+      renderHostClock(r);
     }, 250);
     onCleanup(function () { clearInterval(tick); });
 
@@ -257,19 +290,18 @@
         $('#host-duration button[data-sec="' + sec + '"]').classList.toggle('active', sec === String(seconds));
       });
 
-      renderHostCountdown(s.room);
+      renderHostClock(s.room);
       renderHostNumbers(s.room);
       renderHostPlayers(s.room);
     }
 
-    function renderHostCountdown(r) {
-      var el = $('#host-countdown');
+    function renderHostClock(r) {
+      var clock = $('#host-clock');
       var active = r && r.status === 'active' && r.startedAt;
-      el.classList.toggle('hidden', !active);
+      clock.classList.toggle('hidden', !active);
       if (!active) return;
-      var secs = Math.max(0, Math.ceil((r.startedAt + durationOf(r) - now()) / 1000));
-      el.textContent = '0:' + String(secs).padStart(2, '0');
-      el.classList.toggle('urgent', secs <= 5);
+      setClock(clock, $('#host-clock-arc'), $('#host-clock-hand'),
+               Math.max(0, r.startedAt + durationOf(r) - now()), durationOf(r));
     }
   }
 
@@ -441,13 +473,12 @@
       var remaining = active ? room.startedAt + durationOf(room) - now() : 0;
       var live = active && remaining > 0;
 
-      // Countdown
-      var cd = $('#play-countdown');
-      cd.classList.toggle('hidden', !live);
+      // Countdown clock
+      var clock = $('#play-clock');
+      clock.classList.toggle('hidden', !live);
       if (live) {
-        var secs = Math.max(0, Math.ceil(remaining / 1000));
-        cd.textContent = '0:' + String(secs).padStart(2, '0');
-        cd.classList.toggle('urgent', secs <= 5);
+        setClock(clock, $('#play-clock-arc'), $('#play-clock-hand'),
+                 remaining, durationOf(room));
       }
 
       // Status line
@@ -492,6 +523,15 @@
   /* ─────────── boot ─────────── */
 
   if (firebaseReady()) {
+    // Photo at the tip of the countdown needle (configured on <body data-clock-photo="…">).
+    var clockPhoto = document.body && document.body.dataset ? document.body.dataset.clockPhoto : '';
+    if (clockPhoto) {
+      ['#host-clock .clock-photo', '#play-clock .clock-photo'].forEach(function (sel) {
+        var img = $(sel);
+        if (img) img.src = clockPhoto;
+      });
+    }
+
     window.addEventListener('hashchange', route);
 
     // One delegated click listener for the player number grid.

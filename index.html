@@ -7,13 +7,16 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%89%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-clock-photo="img/needle.svg">
 <main id="app">
+
+  <!-- 📷 To change the photo at the tip of the countdown needle, edit
+       data-clock-photo on the <body> tag at the top of this file. -->
 
   <!-- ═══════════ Landing ═══════════ -->
   <section id="view-landing" class="view">
-    <h1 class="logo">Marimic&nbsp;Party <span>🎉</span></h1>
-    <p class="tagline">Everyone picks a number. No take-backs. 20&nbsp;seconds on the clock.</p>
+    <h1 class="logo">Emma's 30th Birthday Party Quiz <span>🎉</span></h1>
+    <p class="tagline">Everyone picks a number. The quickest and closest to the answers wins !. <b>No take-backs.</b>.</p>
 
     <div class="card">
       <h2>Host a game</h2>
@@ -36,11 +39,14 @@
   <!-- ═══════════ Host ═══════════ -->
   <section id="view-host" class="view hidden">
     <header class="host-header">
-      <h1 class="logo small">Marimic Party <span>🎉</span></h1>
-      <div class="status-pill" id="host-status">Connecting…</div>
+      <h1 class="logo small">Emma's 30th Birthday Party Quiz <span>🎉</span></h1>
+      <div class="host-header-actions">
+        <button id="btn-qr-toggle" class="btn btn-ghost small-text" type="button">🙈 Hide QR</button>
+        <div class="status-pill" id="host-status">Connecting…</div>
+      </div>
     </header>
 
-    <div class="host-grid">
+    <div class="host-grid" id="host-grid">
       <div class="card qr-card">
         <h2>Scan to join</h2>
         <div id="host-qr" class="qr-box"></div>
@@ -50,9 +56,21 @@
       </div>
 
       <div class="card">
-        <div class="round-head">
-          <h2>Round</h2>
-          <div id="host-countdown" class="countdown hidden">0:20</div>
+        <h2>Round</h2>
+
+        <div class="clock-slot">
+          <div id="host-clock" class="clock hidden" aria-hidden="true">
+            <svg class="clock-dial" viewBox="0 0 100 100">
+              <circle class="clock-track" cx="50" cy="50" r="47"/>
+              <circle id="host-clock-arc" class="clock-arc" cx="50" cy="50" r="47"
+                      pathLength="100" transform="rotate(-90 50 50)"/>
+            </svg>
+            <div class="clock-hand" id="host-clock-hand">
+              <span class="clock-needle"></span>
+              <img class="clock-photo" src="img/needle.svg" alt="">
+            </div>
+            <span class="clock-hub"></span>
+          </div>
         </div>
 
         <div id="host-controls">
@@ -85,7 +103,7 @@
 
   <!-- ═══════════ Join (name entry) ═══════════ -->
   <section id="view-join" class="view hidden">
-    <h1 class="logo small">Marimic Party <span>🎉</span></h1>
+    <h1 class="logo small">Emma's 30th Birthday Party Quiz <span>🎉</span></h1>
     <div class="card narrow">
       <h2>Join room <span id="join-room-label" class="room-code">·····</span></h2>
       <form id="join-name-form">
@@ -102,11 +120,22 @@
   <section id="view-play" class="view hidden">
     <header class="host-header">
       <div>
-        <h1 class="logo small">Marimic Party <span>🎉</span></h1>
+        <h1 class="logo small">Emma's 30th Birthday Party Quiz <span>🎉</span></h1>
         <p class="muted small-text">Room <span id="play-code" class="room-code">·····</span>
           · <span id="play-count">0</span> players</p>
       </div>
-      <div id="play-countdown" class="countdown hidden">0:20</div>
+      <div id="play-clock" class="clock small hidden" aria-hidden="true">
+        <svg class="clock-dial" viewBox="0 0 100 100">
+          <circle class="clock-track" cx="50" cy="50" r="47"/>
+          <circle id="play-clock-arc" class="clock-arc" cx="50" cy="50" r="47"
+                  pathLength="100" transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="clock-hand" id="play-clock-hand">
+          <span class="clock-needle"></span>
+          <img class="clock-photo" src="img/needle.svg" alt="">
+        </div>
+        <span class="clock-hub"></span>
+      </div>
     </header>
 
     <div class="card">

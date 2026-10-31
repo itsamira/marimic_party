@@ -13,8 +13,25 @@ else joins from their phones by **scanning a QR code**. Unlimited players.
    for everyone else. When the countdown ends, all numbers lock — or the host
    can hit **⏹ End round** to stop it early.
 
-The host screen shows a live dashboard of who picked which number. On phones,
-the player's number grid is laid out like a phone keypad.
+The host screen shows a live dashboard of who picked which number, plus an
+analog countdown clock. On phones, the player's number grid is laid out like a
+phone keypad.
+
+## Customize
+
+**Clock photo.** The countdown needle carries a round photo. Point it at your
+own image by editing the `data-clock-photo` attribute on the `<body>` tag in
+`index.html`:
+
+```html
+<body data-clock-photo="img/my-photo.jpg">
+```
+
+Square images look best. The default is `img/needle.svg`.
+
+**Hide the QR panel.** The host can click **🙈 Hide QR** to hide the "Scan to
+join" panel; the countdown clock grows to fill the space. Click **📷 Show QR**
+to bring it back. The choice is remembered in the host's browser.
 
 ## How it works
 
@@ -80,6 +97,7 @@ Any later change is just `git push` again.
 ```
 index.html            Single page: landing, host, join and player screens (hash-routed)
 css/style.css         All styling
+img/needle.svg        Default photo on the countdown needle (swap it or point elsewhere)
 js/config.js          Your Firebase config  ← the only file you must edit
 js/app.js             Game logic + routing
 database.rules.json   Firebase security rules (paste into the console)
