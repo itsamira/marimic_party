@@ -300,6 +300,14 @@ label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: .9re
   background: rgba(255, 90, 90, .14);
   border-color: rgba(255, 90, 90, .35);
   color: rgba(255,255,255,.55);
+  font-size: 1rem;               /* picked number becomes secondary… */
+}
+
+.num-cell.taken .owner {
+  font-size: .95rem;             /* …while the player name takes the spotlight */
+  font-weight: 800;
+  color: var(--text);
+  max-width: 96%;
 }
 
 /* player-side buttons */
