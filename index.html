@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marimic Party 🎉</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%89%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main id="app">
+
+  <!-- ═══════════ Landing ═══════════ -->
+  <section id="view-landing" class="view">
+    <h1 class="logo">Marimic&nbsp;Party <span>🎉</span></h1>
+    <p class="tagline">Everyone picks a number. No take-backs. 20&nbsp;seconds on the clock.</p>
+
+    <div class="card">
+      <h2>Host a game</h2>
+      <p class="muted">Open the dashboard on a big screen and let players scan the QR&nbsp;code.</p>
+      <button id="btn-host" class="btn btn-primary btn-big">🎮 Host a game</button>
+    </div>
+
+    <div class="card">
+      <h2>Join a game</h2>
+      <p class="muted">Got a room code? Type it in — or just scan the host's QR&nbsp;code.</p>
+      <form id="join-code-form" class="row">
+        <input id="join-code-input" class="input code-input" maxlength="8"
+               placeholder="e.g. K7MXP" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <button class="btn btn-secondary" type="submit">Join →</button>
+      </form>
+      <p id="join-code-error" class="error hidden"></p>
+    </div>
+  </section>
+
+  <!-- ═══════════ Host ═══════════ -->
+  <section id="view-host" class="view hidden">
+    <header class="host-header">
+      <h1 class="logo small">Marimic Party <span>🎉</span></h1>
+      <div class="status-pill" id="host-status">Connecting…</div>
+    </header>
+
+    <div class="host-grid">
+      <div class="card qr-card">
+        <h2>Scan to join</h2>
+        <div id="host-qr" class="qr-box"></div>
+        <p class="room-code-line">Room code: <span id="host-code" class="room-code">·····</span></p>
+        <p class="muted small-text">Players: <span id="host-count">0</span></p>
+        <button id="btn-delete" class="btn btn-ghost danger small-text">End game &amp; delete room</button>
+      </div>
+
+      <div class="card">
+        <div class="round-head">
+          <h2>Round</h2>
+          <div id="host-countdown" class="countdown hidden">0:20</div>
+        </div>
+
+        <div id="host-controls">
+          <button id="btn-start" class="btn btn-primary btn-big">▶ Start</button>
+          <button id="btn-newround" class="btn btn-secondary btn-big hidden">🔄 New round</button>
+          <p id="host-hint" class="muted">Press start when everyone has joined. Numbers 0–10, first come first served.</p>
+        </div>
+
+        <h3 class="numbers-title">Numbers</h3>
+        <div id="host-numbers" class="numbers-grid"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Players</h2>
+      <ul id="host-players" class="players-list">
+        <li class="muted">Nobody here yet — waiting for the first player to scan the QR code…</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════ Join (name entry) ═══════════ -->
+  <section id="view-join" class="view hidden">
+    <h1 class="logo small">Marimic Party <span>🎉</span></h1>
+    <div class="card narrow">
+      <h2>Join room <span id="join-room-label" class="room-code">·····</span></h2>
+      <form id="join-name-form">
+        <label for="join-name-input">Your name</label>
+        <input id="join-name-input" class="input" maxlength="20" placeholder="e.g. Alex"
+               autocomplete="name" autocapitalize="words">
+        <p id="join-name-error" class="error hidden"></p>
+        <button class="btn btn-primary btn-big" type="submit">Join the game 🚀</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══════════ Player ═══════════ -->
+  <section id="view-play" class="view hidden">
+    <header class="host-header">
+      <div>
+        <h1 class="logo small">Marimic Party <span>🎉</span></h1>
+        <p class="muted small-text">Room <span id="play-code" class="room-code">·····</span>
+          · <span id="play-count">0</span> players</p>
+      </div>
+      <div id="play-countdown" class="countdown hidden">0:20</div>
+    </header>
+
+    <div class="card">
+      <h2>Pick a number <span class="muted small-text">(0–10)</span></h2>
+      <p id="play-status" class="play-status">Waiting for the host to start the game…</p>
+      <div id="play-numbers" class="numbers-grid big"></div>
+      <p class="muted small-text">Once a number is taken it's gone. You get one pick per round.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ Setup (no Firebase config) ═══════════ -->
+  <section id="view-setup" class="view hidden">
+    <h1 class="logo small">Almost there! 🔧</h1>
+    <div class="card narrow">
+      <h2>Connect Firebase</h2>
+      <p>This app needs a free Firebase Realtime Database before it can run:</p>
+      <ol class="steps">
+        <li>Create a project at <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a></li>
+        <li>Add a <b>Realtime Database</b> (Build → Realtime Database → Create database).</li>
+        <li>Copy the web app config into <code>js/config.js</code>.</li>
+      </ol>
+      <p>Full instructions are in the project's <code>README.md</code>.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ Error ═══════════ -->
+  <section id="view-error" class="view hidden">
+    <div class="card narrow">
+      <h2 id="error-title">Oops</h2>
+      <p id="error-message" class="muted"></p>
+      <a href="#/" class="btn btn-secondary">← Back to start</a>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
