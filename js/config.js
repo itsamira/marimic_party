@@ -9,12 +9,13 @@
  * These values are safe to make public — Firebase security rules are what
  * actually protect your data.
  */
+
 window.FIREBASE_CONFIG = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "PASTE_YOUR_PROJECT",
-  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
+    apiKey: "AIzaSyAa5OXglSwdN7hyf-ImSagS6pkitUYI-XY",
+    authDomain: "emma-party-quiz.firebaseapp.com",
+    databaseURL: "https://emma-party-quiz-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "emma-party-quiz",
+    storageBucket: "emma-party-quiz.firebasestorage.app",
+    messagingSenderId: "83430038590",
+    appId: "1:83430038590:web:484152348adaf1c7ac856f"
 };
