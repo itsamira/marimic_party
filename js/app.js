@@ -203,6 +203,11 @@
       roomRef.update(up);
     };
 
+    $('#btn-end').onclick = function () {
+      if (!state.room || state.room.status !== 'active') return;
+      roomRef.update({ status: 'ended' });
+    };
+
     $('#btn-newround').onclick = function () {
       var players = state.room && state.room.players ? state.room.players : {};
       var up = { status: 'lobby', startedAt: null, numbers: null };
@@ -241,6 +246,7 @@
 
       // Buttons
       $('#btn-start').classList.toggle('hidden', s.room.status !== 'lobby');
+      $('#btn-end').classList.toggle('hidden', s.room.status !== 'active');
       $('#btn-newround').classList.toggle('hidden', s.room.status !== 'ended');
       $('#host-hint').classList.toggle('hidden', s.room.status !== 'lobby');
       $('#host-duration').classList.toggle('hidden', s.room.status !== 'lobby');
@@ -450,8 +456,8 @@
       if (chosen !== null) {
         text = '✅ You picked ' + chosen + '. Good luck!';
         cls = 'good';
-      } else if (room.status === 'active' && !live) {
-        text = "⏰ Time's up! Numbers are locked.";
+      } else if (room.status === 'ended' || (room.status === 'active' && !live)) {
+        text = '🏁 Round over — wait for the next round.';
       } else if (!live) {
         text = '⏳ Waiting for the host to start the game…';
       } else if (state.picking) {

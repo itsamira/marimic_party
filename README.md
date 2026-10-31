@@ -10,7 +10,8 @@ else joins from their phones by **scanning a QR code**. Unlimited players.
 3. The host picks a round length (**10, 20 or 30 seconds**, default 20) and
    clicks **▶ Start** — the countdown begins.
 4. Everyone picks a number from **0 to 10**. Once a number is taken, it's locked
-   for everyone else. When the countdown ends, all numbers lock.
+   for everyone else. When the countdown ends, all numbers lock — or the host
+   can hit **⏹ End round** to stop it early.
 
 The host screen shows a live dashboard of who picked which number. On phones,
 the player's number grid is laid out like a phone keypad.
